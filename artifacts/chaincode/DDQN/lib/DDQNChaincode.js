@@ -23,13 +23,14 @@ class DDQNContract extends Contract {
     }
   }
 
-  async createDDQN(
-    ctx,
-    episode,
-    learningRate_0_1,
-    learningRate_0_0_1,
-    learningRate_0_0_0_1
-  ) {
+  async createDDQN(ctx, args) {
+    args = JSON.parse(args);
+    let {
+      episode,
+      learningRate_0_1,
+      learningRate_0_0_1,
+      learningRate_0_0_0_1,
+    } = args;
     let data = { episode: episode };
     const exists = await this.ddqnExists(ctx, JSON.stringify(data));
     if (exists) {
@@ -65,7 +66,7 @@ class DDQNContract extends Contract {
   }
 
   // GetAllAssets returns all assets found in the world state.
-  async getAllDDQN(ctx, args) {
+  async getAllDDQN(ctx) {
     const allResults = [];
     // range query with empty string for startKey and endKey does an open-ended query of all assets in the chaincode namespace.
     const iterator = await ctx.stub.getStateByRange("", "");
@@ -90,6 +91,30 @@ class DDQNContract extends Contract {
       result = await iterator.next();
     }
     return JSON.stringify(allResults);
+  }
+
+  async deleteAllData(ctx) {
+    const iterator = await ctx.stub.getStateByRange("", "");
+    const keysToDelete = [];
+
+    while (true) {
+      const result = await iterator.next();
+      if (result.done) {
+        await iterator.close();
+        break;
+      }
+
+      const key = result.value.key;
+      keysToDelete.push(key);
+    }
+
+    for (const key of keysToDelete) {
+      try {
+        await ctx.stub.deleteState(key);
+      } catch (error) {
+        throw new Error(`Failed to delete state. Error: ${error}`);
+      }
+    }
   }
 }
 

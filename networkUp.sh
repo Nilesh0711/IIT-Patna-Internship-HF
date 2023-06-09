@@ -86,6 +86,30 @@ sleep 2
 
 echo
 echo "**************************************************************"
+echo "Remove wallet and connection-profiles and creating new"
+echo "**************************************************************"
+echo
+cd api/
+sudo rm -rf org1-wallet/
+sudo rm -rf org2-wallet/
+cd config/
+sudo rm -rf connection-org1.json
+sudo rm -rf connection-org2.json
+./generate-ccp.sh
+cd ..
+node initServer.js
+sleep 2
+
+# echo
+# echo "**************************************************************"
+# echo "deploy chaincode for DDQN"
+# echo "**************************************************************"
+# echo
+# ./deployDDQNChaincode.sh
+# sleep 2
+
+echo
+echo "**************************************************************"
 echo "########   Network Up   #############"
 echo "**************************************************************"
 echo

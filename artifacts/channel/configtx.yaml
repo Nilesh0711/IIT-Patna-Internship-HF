@@ -65,7 +65,6 @@ Organizations:
             - Host: peer0.org2.example.com
               Port: 9051
 
-
 Capabilities:
     Channel: &ChannelCapabilities
         V2_0: true
