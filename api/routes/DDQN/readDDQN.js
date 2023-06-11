@@ -40,7 +40,7 @@ exports.getAllDDQN = () => {
       const endTime = process.hrtime(startTime);
       const elapsedTimeInSeconds = endTime[0] + endTime[1] / 1e9;
       fs.appendFileSync(
-        "fetch_ddqn.txt",
+        "fetch_ddqn_500.txt",
         "\n" + elapsedTimeInSeconds.toFixed(2)
       );
       gateway.disconnect();

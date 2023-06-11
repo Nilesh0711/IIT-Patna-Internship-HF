@@ -11,11 +11,11 @@ const channelName = "mychannel";
 const contractName = "dqnChaincode";
 
 async function sendDataToFabric(data) {
-  return new Promise(async (resolve, reject) => {
+  // return new Promise(async (resolve, reject) => {
     // Create a new gateway and connect to the network
     try {
       const gateway = new Gateway();
-      const walletPath = path.join(__dirname, "..","..", "org1-wallet");
+      const walletPath = path.join(__dirname, "..", "..", "org1-wallet");
       const wallet = await Wallets.newFileSystemWallet(walletPath);
       const connectionProfilePath = path.join(
         __dirname,
@@ -40,20 +40,38 @@ async function sendDataToFabric(data) {
         "DQNContract:createDQN",
         JSON.stringify(data)
       );
+
+      // // CPU
+      // const endTime2 = performance.now();
+      // const endCpuUsage2 = process.cpuUsage(startCpuUsage2);
+      // const elapsedTimeMs2 = endTime2 - startTime2;
+      // const cpuUtilization2 =
+      //   ((endCpuUsage2.user + endCpuUsage2.system) / (elapsedTimeMs2 * 1000)) *
+      //   100;
+      // fs.appendFileSync("cpu_dqn.txt", "\n" + cpuUtilization2.toFixed(4));
+
+      // // MEM
+      // const memoryUsage = process.memoryUsage().heapUsed;
+      // const memoryUtilization = memoryUsage / 1024 / 1024; // Convert bytes to KB
+      // fs.appendFileSync("mem_dqn.txt", "\n" + memoryUtilization.toFixed(2));
+
+
       console.log("Data submitted to Fabric:", data);
       gateway.disconnect();
-      resolve();
+      // resolve();
     } catch (error) {
-      reject(error);
-      // console.error("Failed to submit transaction:", error);
+      // reject(error);
+      console.error("Failed to submit transaction:", error);
     }
-  });
+  // });
 }
 
 async function publishDQN() {
-  for (let index = 1; index <= 1; index++) {
+  for (let index = 1; index <= 10; index++) {
     const startUsage = process.cpuUsage();
     const startTime = process.hrtime();
+    const startTime2 = performance.now();
+    const startCpuUsage2 = process.cpuUsage();
 
     const stream = fs.createReadStream("../CSV/dqn.csv");
     for await (const row of stream.pipe(csv())) {
@@ -73,28 +91,16 @@ async function publishDQN() {
     // TIME
     const endTime = process.hrtime(startTime);
     const elapsedTimeInSeconds = endTime[0] + endTime[1] / 1e9;
-    fs.appendFileSync("attach_dqn.txt", "\n" + elapsedTimeInSeconds.toFixed(2));
+    fs.appendFileSync(
+      "attach_dqn_500.txt",
+      "\n" + elapsedTimeInSeconds.toFixed(2)
+    );
 
-    // CPU
-    const endUsage = process.cpuUsage(startUsage);
-    const cpuUtilization =
-      ((endUsage.user + endUsage.system) / (endTime[0] * 1e9 + endTime[1])) *
-      100;
-    fs.appendFileSync("cpu_dqn.txt", "\n" + cpuUtilization.toFixed(4));
-
-    // MEM
-    const memoryUsage = process.memoryUsage().heapUsed;
-    const memoryUtilization = memoryUsage / 1024; // Convert bytes to KB
-    fs.appendFileSync("mem_dqn.txt", "\n" + memoryUtilization.toFixed(2));
-
-    console.log(`Loop number ${index} is completed`);
-
-    // fetchFromFabric
+    // fetchFromFabric;
     await getAllDQN();
 
-    // DeleteFromFabric
+    // DeleteFromFabric;
     await deleteFromFabric();
-
   }
 }
 

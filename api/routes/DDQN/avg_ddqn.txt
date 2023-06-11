@@ -1,0 +1,12 @@
+
+attach_ddqn_100: 47.956
+attach_ddqn_200: 92.750
+attach_ddqn_300: 138.767
+attach_ddqn_400: 191.247
+attach_ddqn_500: 243.331
+
+fetch_ddqn_100: 0.153
+fetch_ddqn_200: 0.168
+fetch_ddqn_300: 0.181
+fetch_ddqn_400: 0.212
+fetch_ddqn_500: 0.225

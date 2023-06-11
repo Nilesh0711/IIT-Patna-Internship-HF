@@ -112,7 +112,7 @@ Orderer: &OrdererDefaults
     Addresses:
         - orderer.example.com:7050
 
-    BatchTimeout: 2s
+    BatchTimeout: 0.3s
 
     BatchSize:
         MaxMessageCount: 10

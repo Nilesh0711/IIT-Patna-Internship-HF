@@ -11,7 +11,7 @@ const channelName = "mychannel";
 const contractName = "ddqnChaincode";
 
 async function sendDataToFabric(data) {
-  return new Promise(async (resolve, reject) => {
+  // return new Promise(async (resolve, reject) => {
     // Create a new gateway and connect to the network
     try {
       const gateway = new Gateway();
@@ -40,20 +40,38 @@ async function sendDataToFabric(data) {
         "DDQNContract:createDDQN",
         JSON.stringify(data)
       );
+
+      // // CPU
+      // const endTime2 = performance.now();
+      // const endCpuUsage2 = process.cpuUsage(startCpuUsage2);
+      // const elapsedTimeMs2 = endTime2 - startTime2;
+      // const cpuUtilization2 =
+      //   ((endCpuUsage2.user + endCpuUsage2.system) / (elapsedTimeMs2 * 1000)) *
+      //   100;
+      // fs.appendFileSync("cpu_dqn.txt", "\n" + cpuUtilization2.toFixed(4));
+
+      // // MEM
+      // const memoryUsage = process.memoryUsage().heapUsed;
+      // const memoryUtilization = memoryUsage / 1024 / 1024; // Convert bytes to KB
+      // fs.appendFileSync("mem_dqn.txt", "\n" + memoryUtilization.toFixed(2));
+
+
       console.log("Data submitted to Fabric:", data);
       gateway.disconnect();
-      resolve();
+      // resolve();
     } catch (error) {
-      reject(error);
-      // console.error("Failed to submit transaction:", error);
+      // reject(error);
+      console.error("Failed to submit transaction:", error);
     }
-  });
+  // });
 }
 
 async function publishDDQN() {
-  for (let index = 1; index <= 1; index++) {
+  for (let index = 1; index <= 10; index++) {
     const startUsage = process.cpuUsage();
     const startTime = process.hrtime();
+    const startTime2 = performance.now();
+    const startCpuUsage2 = process.cpuUsage();
 
     const stream = fs.createReadStream("../CSV/ddqn.csv");
     for await (const row of stream.pipe(csv())) {
@@ -74,28 +92,14 @@ async function publishDDQN() {
     const endTime = process.hrtime(startTime);
     const elapsedTimeInSeconds = endTime[0] + endTime[1] / 1e9;
     fs.appendFileSync(
-      "attach_ddqn.txt",
+      "attach_ddqn_500.txt",
       "\n" + elapsedTimeInSeconds.toFixed(2)
     );
 
-    // CPU
-    const endUsage = process.cpuUsage(startUsage);
-    const cpuUtilization =
-      ((endUsage.user + endUsage.system) / (endTime[0] * 1e9 + endTime[1])) *
-      100;
-    fs.appendFileSync("cpu_ddqn.txt", "\n" + cpuUtilization.toFixed(4));
-
-    // MEM
-    const memoryUsage = process.memoryUsage().heapUsed;
-    const memoryUtilization = memoryUsage / 1024; // Convert bytes to KB
-    fs.appendFileSync("mem_ddqn.txt", "\n" + memoryUtilization.toFixed(2));
-
-    console.log(`Loop number ${index} is completed`);
-
-    // fetchFromFabric
+    // fetchFromFabric;
     await getAllDDQN();
 
-    // DeleteFromFabric
+    // DeleteFromFabric;
     await deleteFromFabric();
   }
 }
